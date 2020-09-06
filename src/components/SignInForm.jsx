@@ -70,13 +70,11 @@ const SignInForm = () => {
               <TextField
                 name="password"
                 value={values.password}
-                onBlur={handleBlur}
                 id="outlined-basic"
                 label="Password"
                 type="password"
                 variant="outlined"
                 onChange={handleChange}
-                error={false}
                 helperText={errors.password}
                 error={Boolean(errors.password)}
               />
