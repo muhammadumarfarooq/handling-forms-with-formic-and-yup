@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Formik } from 'formik';
+
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -13,50 +15,59 @@ const useStyles = makeStyles((theme) => ( {
 } ));
 
 const SignInForm = () => {
-  const [state, setState] = useState({
-    username: "",
-    password: ""
-  });
   const classes = useStyles();
-  const { username, password } = state;
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(state);
-  };
-  
-  const handleChange = e => {
-    setState({ ...state, [e.target.name]: e.target.value });
-  };
   
   return (
-    <form onSubmit={handleSubmit} className={classes.root} autoComplete="off">
-      <TextField
-        name="username"
-        value={username}
-        id="outlined-basic"
-        label="Username"
-        variant="outlined"
-        onChange={handleChange}
-      />
-      <TextField
-        name="password"
-        value={password}
-        id="outlined-basic"
-        label="Password"
-        type="password"
-        variant="outlined"
-        onChange={handleChange}
-      />
-      <div>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-        >
-          Submit
-        </Button>
-      </div>
-    </form>
+    <Formik
+      initialValues={{
+        username: "",
+        password: ""
+      }}
+      onSubmit={(values, { setSubmitting }) => {
+        setTimeout(() => {
+          alert(JSON.stringify(values, null, 2));
+          setSubmitting(false);
+        }, 400);
+      }}
+    >
+      {
+        ({
+           values,
+           handleBlur,
+           handleChange,
+           handleSubmit
+         }) => (
+          <form onSubmit={handleSubmit} className={classes.root} autoComplete="off">
+            <TextField
+              name="username"
+              value={values.username}
+              id="outlined-basic"
+              label="Username"
+              variant="outlined"
+              onChange={handleChange}
+            />
+            <TextField
+              name="password"
+              value={values.password}
+              onBlur={handleBlur}
+              id="outlined-basic"
+              label="Password"
+              type="password"
+              variant="outlined"
+              onChange={handleChange}
+            />
+            <div>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+              >
+                Submit
+              </Button>
+            </div>
+          </form>
+        )}
+    </Formik>
   );
 };
 
