@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -14,8 +15,20 @@ const useStyles = makeStyles((theme) => ( {
   },
 } ));
 
+const loginSchema = Yup.object().shape({
+  username: Yup.string()
+    .max(10, "Username must be less than 10 characters.")
+    .required('Username is required'),
+  password: Yup.string()
+    .max(12, "Password must be less than or equal to 12 characters")
+    .min(4, "Password must be 4 or greater characters")
+    .required("password is required")
+});
+
+
 const SignInForm = () => {
   const classes = useStyles();
+  
   
   return (
     <Formik
@@ -23,24 +36,9 @@ const SignInForm = () => {
         username: "",
         password: ""
       }}
-      validate={values => {
-        const errors = {};
-        if ( !values.username ) {
-          errors.username = 'Username is required';
-        } else if ( values.username.length > 10 ) {
-          errors.username = 'Username must be less than 10 characters.';
-        }
-        
-        if ( !values.password ) {
-          errors.password = 'password is required';
-        } else if ( values.password.length < 4 ) {
-          errors.password = 'Password must be 4 or greater characters';
-        } else if ( values.password.length > 12 ) {
-          errors.password = 'Password must be less than 12 characters';
-        }
-        
-        return errors;
-      }}
+      validationSchema={loginSchema}
+      
+      
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
           alert(JSON.stringify(values, null, 2));
